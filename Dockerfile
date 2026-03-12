@@ -1,7 +1,20 @@
-# syntax=docker/dockerfile:1
-FROM node:12-alpine
-RUN apk add --no-cache python3 g++ make
-WORKDIR /app
+# lightweight node image
+FROM node:18-alpine
+
+# working directory
+WORKDIR /usr/src/app
+
+# copy dependencies
+COPY package*.json ./
+
+# install dependencies
+RUN npm install --omit=dev
+
+# copy application
 COPY . .
-RUN yarn install --production
-CMD ["node", "src/index.js"]
+
+# application port
+EXPOSE 3000
+
+# run application
+CMD ["node","app.js"]
