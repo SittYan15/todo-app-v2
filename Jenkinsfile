@@ -7,9 +7,11 @@ pipeline {
             agent {
                 docker {
                     image 'node:18-alpine'
+                    args '-u root'
                 }
             }
             steps {
+
                 echo 'Installing system dependencies'
 
                 sh '''
@@ -28,10 +30,10 @@ pipeline {
             agent {
                 docker {
                     image 'node:18-alpine'
+                    args '-u root'
                 }
             }
             steps {
-                echo 'Running tests'
 
                 sh '''
                 apk add --no-cache python3 make g++
@@ -42,7 +44,6 @@ pipeline {
 
         stage('Containerize') {
             steps {
-                echo 'Building Docker Image'
 
                 sh '''
                 docker build -t your-dockerhub-username/todo-app:latest .
@@ -52,7 +53,6 @@ pipeline {
 
         stage('Push') {
             steps {
-                echo 'Pushing Docker Image'
 
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub',
